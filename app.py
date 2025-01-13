@@ -1,12 +1,8 @@
 from db import Conn
+from query import q0
+from config import opt
 
-conn = Conn("postgres","xyy001019",
-  "localhost","55435","postgres")
-
-data = conn.execSQL("select column_name\
-  from information_schema.columns where\
-  table_schema='public' and table_name \
-  = 'employee'")
+conn = Conn(opt.username,opt.password,opt.host,opt.port,opt.database)
+data = conn.execSQL(q0)
 
 print(data)
-
