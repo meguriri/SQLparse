@@ -7,7 +7,7 @@ def getTokens(sql):
   p = sqlparse.parse(sql)
   return p[0]
 
-def getQueryName(tokens):
+def getQueryColName(tokens):
   columns = []
   select_found = False
   for token in tokens:
@@ -19,8 +19,15 @@ def getQueryName(tokens):
       if isinstance(token, IdentifierList):
         for identifier in token.get_identifiers():
           if isinstance(identifier, Function):
-            # 函数调用，保留完整表示
-            columns.append(str(identifier))  # 转换为完整字符串
+            func = {}
+            for tok in identifier.tokens:
+              if tok.value.startswith('('):
+                func['param'] = tok.value.strip('()')
+              else:
+                func['func'] = tok.value
+            columns.append(func) 
+            # # 函数调用，保留完整表示
+            # columns.append(str(identifier))  # 转换为完整字符串
           elif isinstance(identifier, Identifier):
             # 普通标识符
             columns.append(identifier.get_real_name() or identifier.value)
@@ -29,13 +36,19 @@ def getQueryName(tokens):
         columns.append(token.get_real_name() or token.value)
       elif isinstance(token, Function):
         # 函数调用，保留完整表示
-        columns.append(str(token))  # 转换为完整字符串
+        func = {}
+        for tok in token.tokens:
+          if tok.value.startswith('('):
+            func['param'] = tok.value.strip('()')
+          else:
+            func['func'] = tok.value
+        columns.append(func)  
       # 遇到 FROM 就停止解析
       elif token.ttype == Keyword and token.value.upper() == "FROM":
         break
   return columns
 
-def getTableName(tokens):
+def getQueryTabName(tokens):
   columns = []
   from_found = False
   for token in tokens:
@@ -82,9 +95,9 @@ def getConditions(tokens):
   return conditions
 
 if __name__ == "__main__":
-  sql = "SELECT name,age FROM users,course WHERE age > 30 and name = 'alice';"
-  statement = getTokens(q1)
+  # sql = "SELECT name,age FROM users,course WHERE age > 30 and name = 'alice';"
+  statement = getTokens(q2)
 
-  print(getQueryName(statement.tokens))
-  print(getTableName(statement.tokens))
+  print(getQueryColName(statement.tokens))
+  print(getQueryTabName(statement.tokens))
   print(getConditions(statement.tokens))

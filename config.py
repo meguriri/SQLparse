@@ -4,6 +4,6 @@ class Config:
   password = "xyy001019"
   host = "localhost"
   port = "55435"
-  database = "postgres"
+  database = "test"
 
 opt = Config()
