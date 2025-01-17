@@ -1,5 +1,5 @@
 from itertools import combinations
-from .query import index_q
+from .query import index_q,table_q
 
 def getColumnDict(tables,conn):
     table2Colnmns = {}
@@ -51,6 +51,10 @@ def getInvertedIndex(raw_table_name,conn):
         index[row['colum_name']] = row['table_names']
     return index
 
-
+def getAllSubTables(raw_table,conn):
+    data = conn.execSQL(table_q.format(
+            table_name =  raw_table,
+        ))
+    return set(data['sub_table_names'][0])
 
 
