@@ -1,7 +1,6 @@
 import sqlparse
 from sqlparse.sql import IdentifierList,Identifier,Where,Comparison,Function
 from sqlparse.tokens import Keyword, DML
-from query import q0,q1,q2
 
 def getTokens(sql):
   p = sqlparse.parse(sql)
@@ -93,11 +92,3 @@ def getConditions(tokens):
               'value': value
             })
   return conditions
-
-if __name__ == "__main__":
-  # sql = "SELECT name,age FROM users,course WHERE age > 30 and name = 'alice';"
-  statement = getTokens(q2)
-
-  print(getQueryColName(statement.tokens))
-  print(getQueryTabName(statement.tokens))
-  print(getConditions(statement.tokens))

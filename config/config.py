@@ -5,5 +5,3 @@ class Config:
   host = "localhost"
   port = "55435"
   database = "test"
-
-opt = Config()
