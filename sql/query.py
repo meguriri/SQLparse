@@ -10,6 +10,13 @@ table_q = "SELECT sub_table_names FROM meta_table WHERE table_name='{table_name}
 
 colum_q = "SELECT colum_name,table_names FROM meta_colum WHERE colum_name='{colum_name}' AND raw_table_name='{raw_table_name}';"
 
+meta_colums_q = """
+select column_name\
+    from information_schema.columns where\
+    table_schema='public' and table_name \
+    = '{table_name}';
+"""
+
 index_q = "SELECT colum_name,table_names FROM meta_colum WHERE raw_table_name='{raw_table_name}' AND array_length(table_names,1) >= 2;"
 
 generate_sql = "SELECT {columns} FROM {tables} {joins} {where} {conditions};"
